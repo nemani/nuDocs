@@ -1,0 +1,101 @@
+@import (reference) '../../customize/src/less2/include/framework.less';
+@import (reference) '../../customize/src/less2/include/sidebar-layout.less';
+@import (reference) '../../customize/src/less2/include/support.less';
+
+&.cp-app-admin {
+
+    .framework_min_main(
+        @bg-color: @colortheme_admin-bg,
+        @warn-color: @colortheme_admin-warn,
+        @color: @colortheme_admin-color
+    );
+    .sidebar-layout_main();
+    .support_main();
+
+    .cp-hidden {
+        display: none !important;
+    }
+
+    display: flex;
+    flex-flow: column;
+
+    .cp-admin-setlimit-form {
+        label {
+            font-weight: normal !important;
+        }
+        input {
+            max-width: 400px;
+        }
+        nav {
+            display: flex;
+            margin-top: 5px;
+        }
+    }
+    .cp-admin-getlimits {
+        code {
+            cursor: pointer;
+        }
+        table {
+            td:not(:last-child) {
+                padding-right: 20px;
+                white-space: nowrap;
+            }
+            td:last-child {
+                min-width: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 500px;
+            }
+            @media screen and (max-width: 1200px) {
+                td.note {
+                    display: none;
+                }
+            }
+            @media screen and (max-width: 1400px) {
+                td.plan {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .cp-support-container {
+        display: flex;
+        flex-flow: column;
+    }
+
+    .cp-support-list-actions {
+        margin: 10px 0px 10px 2px;
+    }
+
+    .cp-support-list-ticket:not(.cp-support-list-closed) {
+        .cp-support-list-message {
+            &:last-child:not(.cp-support-fromadmin)  {
+                color: @colortheme_cp-red;
+                background-color: lighten(@colortheme_form-warning, 25%);
+                .cp-support-showdata {
+                    background-color: lighten(@colortheme_form-warning, 30%);
+                }
+            }
+
+            &:last-child {
+                &.cp-support-frompremium {
+                    background-color: lighten(@colortheme_cp-red, 25%);
+                    .cp-support-showdata {
+                        background-color: lighten(@colortheme_cp-red, 30%);
+                    }
+                }
+            }
+        }
+    }
+
+    .cp-support-fromadmin {
+        color: @colortheme_logo-2;
+        background-color: #FFF;
+        .cp-support-message-content {
+            color: @colortheme_logo-2;
+        }
+    }
+}
+

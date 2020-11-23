@@ -1,0 +1,170 @@
+@import (reference) "../../customize/src/less2/include/framework.less";
+@import (reference) "../../customize/src/less2/include/comments.less";
+@import (reference) "../../customize/src/less2/include/tools.less";
+
+body.cp-app-pad {
+    .framework_main(
+        @bg-color: @colortheme_pad-bg,
+        @warn-color: @colortheme_pad-warn,
+        @color: @colortheme_pad-color
+    );
+
+    @bg-color: #e3e3e3;
+
+    display: flex;
+    flex-flow: column;
+    max-height: 100%;
+    min-height: auto;
+
+    #cp-app-pad-editor {
+        flex: 1;
+        display: flex;
+        flex-flow: row;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    #cp-app-pad-toc {
+        @toc-level-indent: 15px;
+
+        overflow-y: auto;
+        margin-top: 10px;
+        margin-left: 10px;
+        width: 200px;
+        color: @cryptpad_text_col;
+        h2 {
+            font-size: 1.5rem;
+        }
+        p {
+            margin-bottom: 5px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            a {
+                color: @cryptpad_text_col;
+            }
+            &.cp-pad-toc-2 {
+                margin-left: @toc-level-indent;
+            }
+            &.cp-pad-toc-3 {
+                margin-left: @toc-level-indent * 2;
+            }
+        }
+    }
+
+    .cke_toolbox_main {
+        background-color: @colortheme_pad-toolbar-bg;
+        .cke_toolbar {
+            height: 28px;
+            padding: 2px 0;
+        }
+        .cp-app-pad-wordCount {
+            float: right;
+            display: inline-flex;
+            height: 24px;
+            align-items: center;
+            padding: 4px;
+        }
+        .cke_button__print {
+            display: none !important;
+        }
+        .cke_button {
+            .tools_unselectable();
+        }
+    }
+    .cke_wysiwyg_frame {
+        width: 100%;
+    }
+    #cke_editor1 {
+        display: flex;
+        flex-flow: column;
+        height: 100%;
+        border: 0;
+        flex: 1;
+        > .cke_inner {
+            overflow: hidden;
+            flex: 1;
+            position: unset;
+            display: flex;
+            flex-flow: column;
+            margin-top: -1px;
+        }
+        #cke_1_top {
+            display: none;
+        }
+    }
+    #cke_1_contents {
+        flex: 1;
+        display: flex;
+        height: auto !important;
+        background-color: @bg-color;
+        justify-content: center;
+        iframe {
+            flex: 1;
+            min-width: 0;
+            order: 1;
+        }
+        div.cp-comment-bubble {
+            position: relative;
+            order: 2;
+            button {
+                .fa {
+                    margin: 0 !important;
+                }
+                right: 20px;
+                position: absolute;
+            }
+        }
+        #cp-app-pad-comments {
+            order: 3;
+            width: 330px;
+            //background-color: white;
+            margin: 0px 20px;
+            .comments_main();
+        }
+        &.cke_body_width {
+            div.cp-comment-bubble {
+                button {
+                    right: 0px;
+                }
+            }
+            iframe {
+                margin: 0 30px;
+                max-width: 800px;
+            }
+        }
+    }
+
+    .cke_dialog {
+        display: block;
+        overflow-x: auto;
+        max-height: 100vh;
+        .cke_dialog_contents {
+            #ck-mediatag-preview {
+                margin: auto;
+                resize: both;
+                max-width: 300px;
+                max-height: 300px;
+                overflow: auto;
+            }
+            media-tag {
+                display: flex;
+                border-style: solid;
+                border-color: black;
+            }
+        }
+    }
+
+    .cke_wysiwyg_frame {
+        min-width: 60%;
+    }
+
+    @media print {
+        #cke_1_top {
+            display:none !important;
+        }
+        &.cp-app-pad .cp-toolbar-userlist-drawer {
+            display:none;
+        }
+    }
+}

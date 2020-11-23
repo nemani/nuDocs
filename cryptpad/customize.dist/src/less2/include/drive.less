@@ -1,0 +1,976 @@
+@import (reference) "./browser.less";
+@import (reference) './leftside-menu.less';
+@import (reference) "./tools.less";
+@import (reference) "./limit-bar.less";
+@import (reference) "./tokenfield.less";
+@import (reference) "./dropdown.less";
+
+.drive_main() {
+    --LessLoader_require: LessLoader_currentFile();
+};
+&.cp-body-drive {
+    .limit-bar_main();
+    .tokenfield_main();
+
+    @colortheme_drive-bg-light: lighten(@colortheme_drive-bg, 30%);
+    @colortheme_drive-bg-active: lighten(@colortheme_drive-bg, 20%);
+    @colortheme_drive-color: @cryptpad_text_col;
+
+    @drive_hover: #eee;
+    @drive_hover-light: lighten(@drive_hover, 20%);
+    @drive_info-box-bg: #d2e1f2;
+    @drive_info-box-border: #bbb;
+    @drive_table-header-fg: #555;
+    @drive_table-header-bg: #e8e8e8;
+    @drive_mobile-tree-border-col: #ccc;
+
+    @drive_content-fg: @colortheme_sidebar-right-fg;
+    @drive_content-bg: @colortheme_sidebar-right-bg;
+    @drive_content-bg-ro: darken(@drive_content-bg, 10%);
+
+    @drive_selected-bg: #888;
+    @drive_droppable-bg: #FE9A2E;
+
+
+    /* PAGE */
+
+    display: flex;
+    flex-flow: column;
+    max-height: 100%;
+    min-height: auto;
+
+    .cp-unselectable {
+        .tools_unselectable();
+    }
+
+    /* local mixins */
+    @drive_icon-margin: 10px;
+    .drive_fileIcon {
+        li {
+            display: inline-block;
+            margin: @drive_icon-margin;
+            width: 140px;
+            height: 140px;
+            text-align: center;
+            vertical-align: top;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border: 1px solid transparent;
+
+            &:not(.cp-app-drive-element-selected):not(.cp-app-drive-element-selected-tmp) {
+                border: 1px solid #CCC;
+            }
+            .cp-app-drive-element-name {
+                width: 100%;
+                height: 24px;
+                margin: 0;
+                display: inline-block;
+                font-size: 14px;
+                //align-items: center;
+                //justify-content: center;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+            .cp-app-drive-element-truncated {
+                display: block;
+                position: absolute;
+                bottom: 0px;
+                left: 0; right: 0;
+                text-align: center;
+            }
+            img.cp-app-drive-content-icon {
+                height: 48px;
+                max-height: none;
+                max-width: none;
+                margin: 8px 0;
+            }
+            .fa, .cptools {
+                display: block;
+                margin: auto;
+                font-size: 64px;
+                margin: 18px 0;
+                text-align: center;
+                &.listonly {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    img.cp-app-drive-icon {
+        max-width: 20px;
+        max-height: 16px;
+    }
+
+    .cp-app-drive-container {
+        flex: 1;
+        width: 100%;
+        display: flex;
+        flex-flow: row;
+        min-height: 0;
+        min-width: 0;
+        @media screen and (max-width: @browser_media-medium-screen) {
+            display: block;
+            overflow-y: auto;
+            #cp-app-drive-toolbar {
+                .path .element {
+                    display: none;
+                }
+            }
+            #cp-app-drive-tree {
+                resize: none;
+                width: 100% !important;
+                min-width: unset;
+                max-width: unset;
+                max-height: unset;
+                border-bottom: 1px solid @drive_mobile-tree-border-col;
+                .cp-app-drive-tree-category {
+                    margin-top: 0.5em;
+                }
+            }
+        }
+    }
+
+    div:focus {
+        outline: none;
+    }
+
+    .fa {
+        font-family: FontAwesome;
+    }
+    .cptools {
+        font-family: cptools;
+    }
+
+    ul {
+        list-style: none;
+        padding-left: 0px; // Remove the default padding
+    }
+
+    li {
+        padding: 0px 5px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .cp-app-drive-element-restricted {
+        color: #939393;
+    }
+
+    .cp-app-drive-element-droppable {
+        background-color: @drive_droppable-bg;
+        color: #222;
+    }
+
+    .cp-app-drive-element-selected {
+        background: @drive_selected-bg !important;
+        color: #eee;
+        .fa-minus-square-o, .fa-plus-square-o {
+            color: @colortheme_sidebar-left-fg;
+        }
+    }
+
+    .cp-app-drive-element-selected-tmp {
+        border: 1px dotted #bbb;
+        background: #AAA;
+        color: #ddd;
+        .fa-minus-square-o, .fa-plus-square-o {
+            color: @colortheme_sidebar-left-fg;
+        }
+    }
+
+    .cp-app-drive-color-picker {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        .cp-app-drive-color-picker-color {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            display: inline-block;
+            cursor: pointer;
+            .cp-app-drive-icon-folder {
+                position: absolute;
+                font-size: 50px;
+            }
+            .cptools-folder-no-color {
+                color: #bbb;
+            }
+            .fa-check {
+                position: absolute;
+                top: 40%; left: 35%;
+                color: transparent;
+            }
+            &.cp-app-drive-current-color > .fa-check {
+                color: white;
+            }
+
+            &.cp-app-drive-current-color:first-child > .fa-check {
+                color: black;
+            }
+        }
+    }
+
+
+    #cp-app-drive-search {
+        display: inline-flex;
+        align-items: center;
+        max-width: 400px;
+        font-size: 30px;
+        margin: 15px;
+        input {
+            background: transparent;
+            color: @colortheme_drive-color;
+            .tools_placeholder-color(@cryptpad_color_grey);
+            outline-width: 0px;
+            border-radius: 0;
+            width: 100%;
+            border: 0;
+            border-bottom: 3px solid @colortheme_drive-color;
+            margin: 0 5px;
+            flex: 1;
+            min-width: 0;
+            &:focus {
+                outline-width: 0px;
+            }
+            &.cp-app-drive-search-active {
+                & ~ .cp-app-drive-search-cancel {
+                    visibility: visible;
+                }
+            }
+        }
+        .cp-app-drive-search-cancel {
+            visibility: hidden;
+            cursor: pointer;
+        }
+        .cp-app-drive-tree-search-icon, .cp-app-drive-search-cancel {
+            color: @colortheme_drive-color;
+        }
+    }
+    .cp-app-drive-search-spinner {
+        display: inline-flex;
+        color: @colortheme_drive-color;
+        font-size: 40px;
+        align-items: center;
+        justify-content: center;
+    }
+    .cp-app-drive-search-noresult {
+        font-size: 30px;
+        padding: 15px;
+        font-style: italic;
+        color: @cryptpad_color_grey;
+    }
+
+
+    /* TREE */
+
+
+    #cp-app-drive-tree {
+        font-size: @colortheme_app-font-size;
+        //border-right: 1px solid #ccc;
+        box-sizing: border-box;
+        background: @colortheme_sidebar-left-bg;
+        overflow: auto;
+        resize: horizontal;
+        width: auto;
+        white-space: nowrap;
+        max-width: 500px;
+        min-width: 200px;
+        padding: 0px;
+        color: @colortheme_sidebar-left-fg;
+        display: flex;
+        flex-flow: column;
+        max-height: 100%;
+        position: relative;
+        .cp-close-button {
+            position: absolute;
+            cursor: pointer;
+            right: 5px;
+            top: 5px;
+            font-size: 18px;
+            padding: 3px;
+            margin: 0;
+            border: 0;
+            background-color: transparent;
+            outline: none;
+            &:hover {
+                color: #000;
+            }
+        }
+        .cp-app-drive-tree-categories-container {
+            flex: 1;
+            overflow: auto;
+        }
+        img.cp-app-drive-icon {
+            margin-bottom: 3px;
+            margin-left: -2px;
+        }
+        .cp-app-drive-tree-docs {
+            margin-top: 15px;
+            //padding: 0 0 0 20px;
+            padding: 0;
+            cursor: auto;
+            &li, li {
+                padding: 0;
+                &.cp-app-drive-element-collapsed ul {
+                    display: none;
+                }
+                input {
+                    width: ~"calc(100% - 30px)";
+                    padding: 0 10px;
+                    border: 0;
+                    color: lighten(@colortheme_sidebar-left-fg, 40%);
+                    height: auto;
+                }
+                & > span.cp-app-drive-element-row {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    //min-width: ~"calc(100% + 5px)";
+                    .leftside-menu-category_main();
+                    width: ~"calc(100% + 5px)";
+                    margin: 0;
+                    margin-bottom: -6px;
+                    display: inline-block;
+                    cursor: pointer;
+                    margin-left: -5px;
+                    padding-left: 5px;
+                    .fa, .cptools {
+                        display: inline-block;
+                        min-width: 0;
+                        width: 25px;
+                        margin-right: 0px;
+                    }
+                }
+            }
+        }
+        span.cp-app-drive-element {
+            cursor: pointer;
+        }
+        .cp-app-drive-tree-category {
+            margin: 0;
+            margin-top: 15px;
+            .cp-app-drive-tree-root {
+                .fa-trash-o {
+                    padding-left: 2px;
+                }
+            }
+            li {
+                padding: 0;
+                .cp-app-drive-element-row {
+                    display: block;
+                    padding-left: 20px;
+                    .leftside-menu-category_main();
+                    margin: 0;
+                }
+            }
+        }
+        .cp-app-drive-tree-category:last-child {
+            margin-bottom: 20px;
+        }
+        .cp-limit-container {
+            margin-top: 5px;
+        }
+        .fa.cp-app-drive-icon-expcol {
+            margin-left: -10px;
+            font-size: 14px;
+            position: absolute;
+            left: -20px;
+            top: 10px;
+            width: 11px !important;
+            height: 11px !important;
+            padding: 0;
+            margin: 0;
+            background: white;
+            z-index: 10;
+            cursor: default;
+            &:before {
+                position: relative;
+                top: -1px;
+            }
+        }
+        .cp-app-drive-tree-docs {
+            .cp-app-drive-tree-root > .cp-app-drive-element-row > .cp-app-drive-icon-expcol {
+                position: relative;
+                top: 0;
+                left: -10px;
+            }
+            .cp-app-drive-tree-root > .cp-app-drive-element-row > .cp-app-drive-icon-folder {
+                margin-left: -5px;
+            }
+            .cp-app-drive-tree-root {
+                &> .cp-app-drive-element-row {
+                    padding-left: 20px;
+                }
+                &> ul {
+                    padding-left: 30px;
+                }
+            }
+        }
+
+        // Expand/collapse lines
+        .cp-app-drive-tree-docs ul {
+            margin: 0px 0px 0px 10px;
+            list-style: none;
+            padding-left: 10px;
+            li {
+                position: relative;
+                &:before {
+                    position: absolute;
+                    left: -15px;
+                    top: -11px;
+                    content: '';
+                    display: block;
+                    border-left: 1px solid @colortheme_sidebar-left-branch;
+                    height: ~"calc(1em + 11px)";
+                    border-bottom: 1px solid @colortheme_sidebar-left-branch;
+                    width: 15px;
+                }
+                &:after {
+                    position: absolute;
+                    left: -15px;
+                    bottom: -7px;
+                    content: '';
+                    display: block;
+                    border-left: 1px solid @colortheme_sidebar-left-branch;
+                    height: 100%;
+                }
+                &.cp-app-drive-tree-root {
+                    margin: 0px 0px 0px -10px;
+                    &:before {
+                        display: none;
+                    }
+                    &:after {
+                        display: none;
+                    }
+                }
+                &:last-child:after {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    /* CONTENT */
+    #cp-app-drive-content-container {
+        display: flex;
+        flex-flow: column;
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+    #cp-app-drive-content {
+        box-sizing: border-box;
+        background: @drive_content-bg;
+        color: @drive_content-fg;
+        overflow-y: auto;
+        flex: 1;
+        display: flex;
+        flex-flow: column;
+        position: relative;
+        .cp-app-drive-content-select-box {
+            display: none;
+            background-color: rgba(100, 100, 100, 0.7);
+            position: absolute;
+            z-index: 50;
+        }
+        &.cp-app-drive-readonly {
+            background: @drive_content-bg-ro;
+        }
+        h1 {
+            padding-left: 10px;
+            margin-top: 10px;
+        }
+        .cp-app-drive-content-info-box {
+            order: 10;
+            line-height: 2em;
+            padding: 0.25em 0.75em;
+            margin: 1em;
+            background: @drive_info-box-bg;
+            cursor: default;
+            span {
+                cursor: pointer;
+                float: right;
+                margin-top: 0.5em;
+            }
+        }
+        li {
+            cursor: default;
+            &:not(.cp-app-drive-element-header) {
+                &:hover {
+                    &:not(.-cp-app-drive-element-selected, .cp-app-drive-element-selected-tmp) {
+                        background-color: @drive_hover;
+                    }
+                }
+            }
+        }
+        #cp-app-drive-content-folder {
+            order: 20;
+            li {
+                &.cp-app-drive-search-result {
+                    display: flex;
+                    height: 2 * @variables_bar-height;
+                    .cp-app-drive-search-path {
+                        .cp-app-drive-path-inner {
+                            display: flex;
+                            flex-flow: row-reverse wrap-reverse;
+                            justify-content: flex-end;
+                            .cp-app-drive-path-element {
+                                flex-shrink: 0;
+                                display: inline-block;
+                                margin-right: 5px;
+                                white-space: normal;
+                                word-wrap: break-word;
+                                max-width: 100%;
+                            }
+                            .cp-app-drive-path-clickable {
+                                cursor: pointer;
+                                &:hover {
+                                    background-color: #eee;
+                                }
+                            }
+                        }
+                        font-size: 12px;
+                        line-height: 16px;
+                        color: @drive_table-header-fg;
+                    }
+                }
+                &.cp-app-drive-tags-list {
+                    width: 100%;
+                    table {
+                        margin: 10px;
+                        width: ~"calc(100% - 100px)";
+                        table-layout: fixed;
+                        td, th {
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                        }
+                    }
+                }
+                &.cp-app-drive-element-separator {
+                    text-align: left;
+                    font-weight: bold;
+                    margin-top: 0;
+                }
+            }
+        }
+        .cp-app-drive-element {
+            .cp-app-drive-element-truncated { display: none; }
+        }
+
+        .cp-app-drive-new-ghost {
+            cursor: pointer;
+            opacity: 0.5;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+            display: inline-flex;
+            &:hover {
+                opacity: 0.7;
+            }
+            .fa, .cptools {
+                cursor: pointer;
+            }
+        }
+        div.cp-app-drive-content-grid {
+            padding: 1em;
+            ul {
+                margin: -(@drive_icon-margin);
+            }
+            .drive_fileIcon;
+            li {
+                &.cp-app-drive-element {
+                    position: relative;
+                }
+                &.cp-app-drive-element-separator {
+                    display: block;
+                    height: auto;
+                    width: auto;
+                    border: none !important;
+                }
+                input {
+                    width: 100%;
+                    margin: 0;
+                    padding: 0;
+                    border-radius: 0;
+                    border: 1px solid #ddd;
+                    font-size: 14px;
+                    height: auto;
+                }
+                .cp-app-drive-element-state {
+                    position: absolute;
+                    top: 3px;
+                    right: 3px;
+                    .fa, .cptools {
+                        margin: 0;
+                        font-size: 18px;
+                    }
+                }
+                .cp-app-drive-element-thumbnail {
+                    max-width: 100px;
+                    max-height: 100px;
+                    & ~ .fa, & ~ .cptools {
+                        display: inline;
+                        font-size: 17px;
+                        position: absolute;
+                        top: 3px;
+                        left: 3px;
+                        margin: 0;
+                    }
+                }
+            }
+            .cp-app-drive-new-ghost {
+                flex-flow: column;
+                .fa, .cptools {
+                    font-size: 90px;
+                    margin-top: 5px;
+                    margin-bottom: 0;
+                }
+            }
+            .cp-app-drive-element-list {
+                display: none;
+            }
+        }
+
+        .cp-app-drive-content-list {
+            .cp-app-drive-element-grid {
+                display: none;
+            }
+            // Make it act as a table!
+            .cp-app-drive-new-ghost {
+                padding: 0 5px;
+                margin-top: 20px;
+            }
+            padding-left: 10px;
+            ul {
+                width: 100%;
+            }
+            li {
+                display: flex;
+                input {
+                    border: 1px solid #ddd;
+                    margin: 0;
+                    padding: 0 4px;
+                    flex: 1;
+                    min-width: 0;
+                    height: auto;
+                }
+
+                &> span {
+                    padding: 0 5px;
+                    display: inline-block;
+                    white-space: nowrap;
+                    &:first-child, &.cp-icon {
+                        min-width: 20px;
+                        text-align: center;
+                        font-size: 18px;
+                        line-height: 32px;
+                        padding: 0;
+                    }
+                    &.cp-app-drive-element-name {
+                        flex: 1;
+                        min-width: 0;
+                        text-align: left;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
+                    &.cp-app-drive-element-state {
+                        min-width: 40px;
+                        text-align: right;
+                        display: flex;
+                        align-items: center;
+                        justify-content: end;
+                        height: @variables_bar-height;
+                        .fa, .cptools {
+                            &:not(:last-child) {
+                                margin-right: 2px;
+                            }
+                        }
+                    }
+                    &.cp-app-drive-element-list {
+                        width: 120px;
+                    }
+                    &.cp-app-drive-element-sort {
+                        display: none;
+                        .dropdown_main();
+                        .cp-dropdown-content a {
+                            display: block !important;
+                            .sortdesc {
+                                order: 2;
+                            }
+                        }
+                        button {
+                            color: inherit;
+                            background: none;
+                            border: none;
+                            .fa {
+                                margin-right: 5px;
+                            }
+                        }
+                    }
+                }
+                &:not(.cp-app-drive-element-header) {
+                    height: @variables_bar-height;
+                    line-height: @variables_bar-height;
+                }
+                &.cp-app-drive-element-separator {
+                    position: relative;
+                    height: 1.5 * @variables_bar-height;
+                    line-height: 1.5 * @variables_bar-height;
+                    span {
+                        line-height: 1.5 * @variables_bar-height;
+                        position: absolute;
+                    }
+                }
+                &.cp-app-drive-element-header {
+                    cursor: default;
+                    color: @drive_table-header-fg;
+                    span {
+                        &:not(.fa):not(.cptools) {
+                            text-align: left;
+                        }
+                        &.sortasc, &.sortdesc {
+                            margin-right: 3px;
+                        }
+                    }
+                    &> span {
+                        padding: 14px 5px;
+                        &.cp-app-drive-sort-clickable {
+                            cursor: pointer;
+                            &:hover {
+                                background: @drive_table-header-bg;
+                            }
+                        }
+                    }
+                    .cp-app-drive-element-state {
+                        display: none !important;
+                    }
+                }
+            }
+            .cp-app-drive-element {
+                span {
+                    overflow: hidden;
+                    white-space: nowrap;
+                    box-sizing: border-box;
+                }
+            }
+            @media screen and (max-width: 840px) {
+                .cp-app-drive-element-type, .cp-app-drive-element-filler {
+                    display: none !important;
+                }
+                .cp-app-drive-element-sort {
+                    display: block !important;
+                }
+            }
+
+            @media screen and (max-width: 740px) {
+                .cp-app-drive-element-folders, .cp-app-drive-element-ctime {
+                    display: none !important;
+                }
+            }
+
+            @media screen and (max-width: 670px) {
+                .cp-app-drive-element-files, .cp-app-drive-element-atime {
+                    display: none !important;
+                }
+                .cp-app-drive-element-header .cp-app-drive-element-state {
+                    display: none !important;
+                }
+            }
+        }
+
+        & > .cp-app-drive-path {
+            order: 1;
+            width: 100%;
+            height: @variables_bar-height;
+            line-height: @variables_bar-height;
+            cursor: default;
+            width: auto;
+            overflow: hidden;
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-width: 50px;
+            max-width: 100%;
+            text-align: left;
+            display: flex;
+            flex-direction: row;
+
+            .cp-app-drive-path-inner {
+                display: flex;
+                flex-flow: row-reverse;
+                flex-grow: 1;
+                justify-content: flex-end;
+                padding-left: 10px;
+                .cp-app-drive-path-element {
+                    .tools_unselectable();
+                    display: inline-block;
+                    flex-shrink: 0;
+                    max-width: 100%;
+                    height: @variables_bar-height;
+                    line-height: @variables_bar-height;
+                    font-size: @colortheme_app-font-size;
+                    padding: 0 5px;
+                    border: 0;
+                    //background: @colortheme_drive-bg-active;
+                    color: @colortheme_drive-color;
+                    box-sizing: border-box;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    transition: all 0.15s;
+
+                    &:first-child {
+                        flex-shrink: 1;
+                    }
+
+                    &.cp-app-drive-path-separator {
+                        color: #ccc;
+                        cursor: default;
+                    }
+
+                    &.cp-app-drive-path-collapse {
+                        position: relative;
+                    }
+
+                    &.cp-app-drive-element-droppable {
+                        background-color: @drive_droppable-bg;
+                    }
+                    &.cp-app-drive-path-clickable {
+                        cursor: pointer;
+                        &:hover {
+                            &:not(.cp-app-drive-path-separator) {
+                                text-decoration: underline;
+                            }
+                            & ~ .cp-app-drive-path-element:not(.cp-app-drive-path-separator) {
+                                text-decoration: underline;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #cp-app-drive-content-folder {
+        padding-right: 10px;
+        flex: 1;
+    }
+
+    #cp-app-drive-new-ghost-dialog.cp-modal-container {
+        .drive_fileIcon;
+
+        border: 1px solid @colortheme_modal-fg;
+        li:not(.cp-app-drive-element-selected):hover {
+            background: @colortheme_modal-fg;
+            color: @colortheme_modal-bg;
+        }
+        .cp-modal {
+            display: flex;
+            flex-flow: column;
+            li, li .fa, li .cptools {
+                cursor: pointer;
+            }
+            &> p {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            &> div {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-content: center;
+                flex: 1;
+                .cp-app-drive-new-upload {
+                    break-after: always;
+                    page-break-after: always;
+                }
+            }
+        }
+
+        .cp-app-drive-new-name {
+            white-space: nowrap;
+        }
+
+        @media screen and (max-width: @browser_media-medium-screen),
+               screen and (max-height: @browser_media-medium-screen) {
+            .cp-modal {
+                & > p {
+                    display: none;
+                }
+                & > div {
+                    li {
+                        height: 40px;
+                        width: 90%;
+                        display: flex;
+                        align-items: center;
+                        align-content: unset;
+                        .fa, .cptools {
+                            font-size: 32px;
+                            min-width: 50px;
+                        }
+                        .cp-app-drive-new-name {
+                            height: auto;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    .cp-toolbar-bottom {
+        .cp-toolbar-bottom-right {
+            .fa-history { order: 50; }
+            .fa-list, .fa-th-large { order: 25; }
+            #cp-app-drive-toolbar-context-mobile, #cp-app-drive-toolbar-contextbuttons { order: 0; }
+            #cp-app-drive-toolbar-context-mobile {
+                .fa { margin: 0 !important; }
+            }
+            #cp-app-drive-toolbar-contextbuttons {
+                height: @variables_bar-height;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
+    #cp-app-drive-edition-state {
+        height: @variables_bar-height;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: @colortheme_drive-bg-active;
+        color: black;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: default;
+    }
+    #cp-app-drive-connection-state {
+        height: @variables_bar-height;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #eb675e;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: default;
+    }
+
+    .cp-app-drive-button {
+        order: 15;
+        margin: 0 1em;
+    }
+
+}
+

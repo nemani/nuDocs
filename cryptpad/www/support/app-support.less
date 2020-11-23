@@ -1,0 +1,38 @@
+@import (reference) '../../customize/src/less2/include/framework.less';
+@import (reference) '../../customize/src/less2/include/sidebar-layout.less';
+@import (reference) '../../customize/src/less2/include/support.less';
+
+&.cp-app-support {
+    .framework_min_main(
+        @bg-color: @colortheme_support-bg,
+        @warn-color: @colortheme_support-warn,
+        @color: @colortheme_support-color
+    );
+    .sidebar-layout_main();
+    .support_main();
+
+    .cp-hidden {
+        display: none !important;
+    }
+
+    display: flex;
+    flex-flow: column;
+
+            .cp-support-form-attachments {
+                .fa {
+                    cursor: pointer;
+                }
+                &> span {
+                    padding: 10px;
+                }
+            }
+
+    .cp-support-language-list {
+        .cp-support-language {
+            margin-left: 5px;
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 0 5px;
+        }
+    }
+}
+
